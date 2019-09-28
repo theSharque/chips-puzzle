@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Chips puzzle</string>
+    <string name="level">Level</string>
+    <string name="time">Time</string>
+    <string name="best">Best</string>
+    <string name="select_level">Select level</string>
+</resources>
