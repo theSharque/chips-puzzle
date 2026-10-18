@@ -1,12 +1,15 @@
 package com.saturn7.chipspuzzle;
 
 import android.app.Activity;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.window.OnBackInvokedCallback;
+import android.window.OnBackInvokedDispatcher;
 
 import com.saturn7.chipspuzzle.audio.ScratchPlayer;
 import com.saturn7.chipspuzzle.game.GameSession;
@@ -28,6 +31,7 @@ public class PuzzleActivity extends Activity implements PuzzleBoardView.Listener
     private LevelSelectView levelsOverlay;
     private TextView completeTitle;
     private TextView completeTime;
+    private final OnBackInvokedCallback backCallback = this::handleBack;
 
     private final Runnable hudTick = new Runnable() {
         @Override
@@ -75,6 +79,10 @@ public class PuzzleActivity extends Activity implements PuzzleBoardView.Listener
         });
 
         showScreen();
+        if (Build.VERSION.SDK_INT >= 33) {
+            getOnBackInvokedDispatcher().registerOnBackInvokedCallback(
+                    OnBackInvokedDispatcher.PRIORITY_DEFAULT, backCallback);
+        }
     }
 
     @Override
@@ -95,18 +103,25 @@ public class PuzzleActivity extends Activity implements PuzzleBoardView.Listener
 
     @Override
     protected void onDestroy() {
+        if (Build.VERSION.SDK_INT >= 33) {
+            getOnBackInvokedDispatcher().unregisterOnBackInvokedCallback(backCallback);
+        }
         scratchPlayer.release();
         super.onDestroy();
     }
 
     @Override
     public void onBackPressed() {
+        handleBack();
+    }
+
+    private void handleBack() {
         if (session.screen() == Screen.LEVELS) {
             session.closeLevels();
             showScreen();
             return;
         }
-        super.onBackPressed();
+        finish();
     }
 
     @Override

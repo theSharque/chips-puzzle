@@ -7,3 +7,9 @@
 **/build
 /captures
 .cxx
+.env
+*.apk
+*.aab
+*.ap_
+*.keystore
+*.jks

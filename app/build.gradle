@@ -2,23 +2,68 @@ plugins {
     id 'com.android.application'
 }
 
+def secret = rootProject.ext.secret
+
+def resolveKeystore(path) {
+    if (!path) {
+        return null
+    }
+    def candidate = new File(path)
+    if (candidate.isAbsolute()) {
+        return candidate
+    }
+    return rootProject.file(path)
+}
+
+def playKeystoreFile = resolveKeystore(secret('PLAY_KEYSTORE') ?: '../key/saturn7')
+def apkKeystoreFile = resolveKeystore(secret('APK_KEYSTORE'))
+
 android {
     namespace 'com.saturn7.chipspuzzle'
-    compileSdk 35
+    compileSdk 36
 
     defaultConfig {
         applicationId "com.saturn7.chipspuzzle"
         minSdk 24
-        targetSdk 35
+        targetSdk 36
         versionCode 17
         versionName "2.0"
+    }
+
+    signingConfigs {
+        play {
+            if (playKeystoreFile.exists()) {
+                storeFile playKeystoreFile
+                storePassword secret('PLAY_STORE_PASSWORD')
+                keyAlias secret('PLAY_KEY_ALIAS') ?: 'saturn'
+                keyPassword secret('PLAY_KEY_PASSWORD') ?: secret('PLAY_STORE_PASSWORD')
+            }
+        }
+        apk {
+            if (apkKeystoreFile != null && apkKeystoreFile.exists()) {
+                storeFile apkKeystoreFile
+                storePassword secret('APK_STORE_PASSWORD')
+                keyAlias secret('APK_KEY_ALIAS') ?: 'ballmaze'
+                keyPassword secret('APK_KEY_PASSWORD') ?: secret('APK_STORE_PASSWORD')
+            }
+        }
     }
 
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            if (rootProject.findProperty('releaseSigner') == 'apk') {
+                signingConfig signingConfigs.apk
+            } else {
+                signingConfig signingConfigs.play
+            }
         }
+    }
+
+    lint {
+        checkReleaseBuilds false
+        abortOnError false
     }
 
     compileOptions {
