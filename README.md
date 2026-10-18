@@ -1,3 +1,7 @@
 # chips-puzzle
 
-A game for Android. Old engine never update.
+Native Android sliding-chip maze. Drag chips; walls and other chips block movement.
+
+```
+./gradlew testDebugUnitTest assembleDebug
+```

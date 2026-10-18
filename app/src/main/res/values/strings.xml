@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">Chips puzzle</string>
+    <string name="level">Level</string>
+    <string name="time">Time</string>
+    <string name="best">Best</string>
+    <string name="best_empty">--:--</string>
+    <string name="levels">Levels</string>
+    <string name="random_level">Rand</string>
+    <string name="level_complete">Level %1$d</string>
+    <string name="random_complete">Random</string>
+    <string name="time_label">Time %1$s</string>
+    <string name="tap_continue">Tap to continue</string>
+    <string name="board_description">Chip maze board</string>
 </resources>
