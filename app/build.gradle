@@ -23,7 +23,7 @@ android {
     compileSdk 36
 
     defaultConfig {
-        applicationId "com.saturn7.chipspuzzle"
+        applicationId "com.saturn7.game.puzzle.free"
         minSdk 24
         targetSdk 36
         versionCode 17
